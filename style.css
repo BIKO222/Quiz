@@ -1,0 +1,220 @@
+/* Переменные */
+:root {
+    --bg-color: #141E30;
+    --text-color: white;
+    --button-bg: #FFC107;
+    --card-bg: rgba(255, 255, 255, 0.15);
+    --shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    --hover-scale: 1.05;
+}
+
+.light-theme {
+    --bg-color: #f9f9f9;
+    --text-color: #333;
+    --button-bg: #1ABC9C;
+    --card-bg: white;
+    --shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Фон и базовые стили */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: 0.3s;
+}
+
+/* Навигация */
+header {
+    width: 100%;
+    background: rgba(20, 30, 48, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    position: fixed;
+    top: 0;
+    box-shadow: var(--shadow);
+}
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    text-decoration: underline;
+    transform: scale(var(--hover-scale));
+}
+
+/* Контейнеры */
+#auth-container, #quiz-container {
+    max-width: 420px;
+    margin: 80px auto;
+    padding: 30px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    border-radius: 15px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+/* Формы */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 16px;
+    color: white;
+    transition: 0.3s;
+}
+
+input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Кнопки */
+button {
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: scale(var(--hover-scale));
+}
+
+/* Рейтинг */
+#rating {
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#auth-container, #quiz-container {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Адаптивность */
+@media screen and (max-width: 600px) {
+    #auth-container, #quiz-container {
+        width: 95%;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+/* Стили для кнопки темы */
+#theme-toggle {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    background: var(--button-bg);
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#theme-toggle:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+/* Добавим плавный переход темы */
+body {
+    transition: background 0.3s ease, color 0.3s ease;
+}
+/* Доработка кнопки смены темы */
+#theme-toggle {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 50px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Улучшение полей ввода */
+input {
+    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+body {
+    transition: background 0.4s ease, color 0.4s ease, opacity 0.4s ease-in-out;
+}
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: none;
+    background: rgba(30, 58, 98, 0.5); /* Глубокий синий оттенок */
+    border-radius: 8px;
+    font-size: 16px;
+    color: #FFC107; /* Желтый текст для контраста */
+    transition: 0.3s;
+}
+
+.light-theme input {
+    background: rgba(180, 216, 255, 0.8); /* Светло-голубой для светлой темы */
+    color: #333;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+a{
+    color: rgb(0, 0, 0);
+    text-shadow: 0px 0px 10px rgb(255, 255, 255);
+}
+input:focus {
+    outline: none;
+    background: rgba(45, 85, 151, 0.7);
+    box-shadow: 0px 4px 10px rgba(255, 193, 7, 0.4); /* Мягкая тень для эффекта */
+}
+.light-theme input {
+    background: rgba(230, 230, 230, 0.8); /* Светлый фон */
+    color: #333; /* Темный текст */
+    border: 1px solid #bbb;
+}
+
+.light-theme input::placeholder {
+    color: rgba(100, 100, 100, 0.6); /* Серый оттенок */
+}
+
+.light-theme input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 4px 8px rgba(50, 50, 50, 0.2);
+}
