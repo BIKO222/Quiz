@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Викторина</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Навигационная панель -->
+  <header>
+    <div id="navbar">
+      <nav>
+        <a href="#home">Главная</a>
+        <a href="#about">О нас</a>
+        <a href="#contacts">Контакты</a>
+        <a href="#leaderboard">Рейтинг</a>
+      </nav>
+      <button id="theme-toggle">🌙/☀️</button>
+    </div>
+  </header>
+
+  <!-- Формы для входа и регистрации -->
+  <div id="auth-container">
+    <div id="login-form">
+      <h2>Вход</h2>
+      <form id="login">
+        <input type="text" id="login-username" placeholder="Имя пользователя" required><br>
+        <input type="password" id="login-password" placeholder="Пароль" required><br>
+        <button type="submit">Войти</button>
+      </form>
+      <p><a href="#" onclick="toggleForms()">Нет аккаунта? Зарегистрироваться</a></p>
+    </div>
+    <div id="register-form" style="display: none;">
+      <h2>Регистрация</h2>
+      <form id="register">
+        <input type="text" id="register-username" placeholder="Имя пользователя" required><br>
+        <input type="password" id="register-password" placeholder="Пароль" required><br>
+        <button type="submit">Зарегистрироваться</button>
+      </form>
+      <p><a href="#" onclick="toggleForms()">Уже есть аккаунт? Войти</a></p>
+    </div>
+  </div>
+
+  <!-- Викторина -->
+  <div id="quiz-container">
+    <h2>Викторина по AI</h2>
+    <div id="question-container"></div>
+    <button id="submit-answer">Ответить</button>
+    <div id="result"></div>
+    <div id="rating"></div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+
+    function toggleForms() {
+      const loginForm = document.getElementById("login-form");
+      const registerForm = document.getElementById("register-form");
+      loginForm.style.display = loginForm.style.display === "none" ? "block" : "none";
+      registerForm.style.display = registerForm.style.display === "none" ? "block" : "none";
+    }
+
+    // Смена темы
+    const themeToggle = document.getElementById("theme-toggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+    });
+
+    // Логика входа
+    document.getElementById("login").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const username = document.getElementById("login-username").value.trim();
+      const password = document.getElementById("login-password").value.trim();
+      const user = users.find(user => user.username === username && user.password === password);
+      if (user) {
+        currentUser = user;
+        alert("Вход выполнен успешно!");
+        showQuiz();
+      } else {
+        alert("Неверные данные. Попробуйте еще раз.");
+      }
+    });
+
+    // Логика регистрации
+    document.getElementById("register").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const username = document.getElementById("register-username").value.trim();
+      const password = document.getElementById("register-password").value.trim();
+      if (users.some(user => user.username === username)) {
+        alert("Такой пользователь уже существует!");
+      } else {
+        const newUser = { username, password, score: 0 };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        alert("Регистрация прошла успешно!");
+        toggleForms();
+      }
+    });
+
+    // Викторина
+    const quizQuestions = [
+      {
+        question: "Что означает AI?",
+        options: ["Автоматический интерфейс", "Искусственный интеллект"],
+        answer: "Искусственный интеллект"
+      },
+      {
+        question: "Какая структура данных использует FIFO?",
+        options: ["Стек", "Очередь"],
+        answer: "Очередь"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function displayQuestion() {
+      const container = document.getElementById("question-container");
+      if (currentQuestionIndex < quizQuestions.length) {
+        const q = quizQuestions[currentQuestionIndex];
+        container.innerHTML = ` 
+          <p>${q.question}</p>
+          ${q.options.map(option => ` 
+            <label><input type="radio" name="question" value="${option}"> ${option}</label>
+          `).join('')}
+        `;
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("question-container").innerHTML = "";
+      document.getElementById("submit-answer").style.display = "none";
+      document.getElementById("result").innerHTML = ` 
+        <p>Викторина завершена!</p>
+        <p>Ваш результат: ${score} из ${quizQuestions.length}</p>
+      `;
+      if (currentUser) {
+        currentUser.score += score;
+        localStorage.setItem('users', JSON.stringify(users));
+        showRating();
+      }
+    }
+
+    function showQuiz() {
+      document.getElementById("auth-container").style.display = "none";
+      document.getElementById("quiz-container").style.display = "block";
+      displayQuestion();
+    }
+
+    document.getElementById("submit-answer").addEventListener("click", function() {
+      const selected = document.querySelector('input[name="question"]:checked');
+      if (selected) {
+        const answer = selected.value;
+        if (answer === quizQuestions[currentQuestionIndex].answer) {
+          score++;
+        }
+        currentQuestionIndex++;
+        displayQuestion();
+      } else {
+        alert("Пожалуйста, выберите вариант ответа.");
+      }
+    });
+
+    function showRating() {
+      const ratingDiv = document.getElementById("rating");
+      const sortedUsers = [...users].sort((a, b) => b.score - a.score);
+      ratingDiv.innerHTML = `<h3>Рейтинг:</h3>
+        <ol>
+          ${sortedUsers.map(user => `<li>${user.username} — ${user.score} баллов</li>`).join('')}
+        </ol>`;
+      ratingDiv.style.display = "block";
+    }
+
+  </script>
+</body>
+</html>
